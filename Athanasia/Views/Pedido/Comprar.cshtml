@@ -1,0 +1,91 @@
+﻿@{
+    List<ProductoSimpleView> productos;
+    if (Context.User.Identity.IsAuthenticated == false)
+    {
+        productos = memoryCache.Get<List<ProductoSimpleView>>("CARRITO");
+    }
+    else
+    {
+        string idusuario = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        productos = await serviceRedis.GetProductosFavoritosAsync(idusuario);
+    }
+    List<InformacionCompraView> metodosPago = ViewData["INFOCOMPRAUSUARIO"] as List<InformacionCompraView>;
+    if (productos == null)
+    {
+        productos = new List<ProductoSimpleView>();
+    }
+    double precioTotal = 0;
+    string urlOrigen = helperPaths.GetStorageBlob("portadas");
+}
+<div class="card bg-light p-4">
+    <h1>Comprar</h1>
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <label>Selecciona un método de pago</label>
+        <select name="metodopago" class="form-select mb-3" style="width:20rem;">
+            @foreach (InformacionCompraView ic in metodosPago)
+            {
+                <option value="@ic.IdInformacionCompra">@ic.Nombre</option>
+            }
+        </select>
+        <h4>Resumen</h4>
+        <table class="table " style="max-width:60rem;width:70vw;">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width:7rem;">Portada</th>
+                    <th class="text-center">Titulo</th>
+                    <th class="text-center">Autor</th>
+                    <th class="text-center">Formato</th>
+                    <th class="text-center">Precio/u</th>
+                    <th class="text-center">Unidades</th>
+                    <th class="text-center">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (productos.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7">No tienes productos</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (ProductoSimpleView prod in productos)
+                    {
+                        precioTotal += prod.Precio * prod.Unidades;
+                        <tr>
+                            <td class="text-center">
+                                <img src="@(urlOrigen+prod.Portada)" class="rounded" style="width:5rem;height:7rem;" />
+                            </td>
+                            <td class="text-center align-middle">
+                                @prod.Titulo
+                            </td>
+                            <td class="text-center align-middle">
+                                @prod.Autor
+                            </td>
+                            <td class="text-center align-middle">
+                                @prod.Formato
+                            </td>
+                            <td class="text-center align-middle">
+                                @prod.Precio€
+                            </td>
+                            <td class="text-center align-middle">
+                                @prod.Unidades
+                            </td>
+                            <td class="text-center align-middle">
+                                @(prod.Precio * prod.Unidades)€
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="7" class="text-end"><h6>Precio total: @precioTotal€</h6></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (productos.Count != 0)
+        {
+            <button class="btn btn-success">Realizar pedido</button>
+        }
+    </form>
+</div>

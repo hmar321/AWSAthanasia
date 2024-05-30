@@ -1,0 +1,90 @@
+﻿@{
+    UsuarioRegistro formRegistro = ViewData["REGISTROUSUARIO"] as UsuarioRegistro;
+}
+<div class="d-flex flex-column align-items-center" style="min-height:100%">
+    @if (formRegistro == null)
+    {
+        <form method="post">
+            <div class="card bg-dark d-flex flex-column align-items-center p-5" style="width:40rem;min-height:44rem;">
+                <h1 class="text-light">Registro</h1>
+                <h5 style="color:lightgreen">@ViewData["MENSAJE"]</h5>
+                <h5 style="color:lightcoral">@ViewData["ERROR"]</h5>
+                <a href="@ViewData["URL"]">@ViewData["URL"]</a>
+                <div class="mb-3" style="width:28rem;">
+                    <label for="nombre" class="form-label text-light">Nombre:</label>
+                    <input type="text" class="form-control" name="nombre">
+                </div>
+                <div class="mb-3" style="width:28rem;">
+                    <label for="apellido" class="form-label text-light">Apellido:</label>
+                    <input type="text" class="form-control" name="apellido">
+                </div>
+                <div class="mb-3" style="width:28rem;">
+                    <label for="email" class="form-label text-light">Email:</label>
+                    <input type="email" class="form-control" name="email">
+                </div>
+                <div class="mb-3" style="width:28rem;">
+                    <label for="password" class="form-label text-light">Contraseña:</label>
+                    <input type="password" class="form-control" name="password">
+                </div>
+                <div class="mb-3" style="width:28rem;">
+                    <label for="password2" class="form-label text-light">Repetir Contraseña:</label>
+                    <input type="password" class="form-control" name="password2">
+                </div>
+                <div class="mb-3 form-check" style="width:28rem;">
+                    <input type="checkbox" class="form-check-input" value="true" name="terminos">
+                    <label class="form-check-label text-light" for="terminos">he leído los <a asp-controller="Usuario" asp-action="Terminos" class="link-light">terminos de uso</a> y estoy de acuerdo</label>
+                </div>
+                <div class="mb-3" style="width:28rem;">
+                    <button class="btn btn-primary">Registrarse</button>
+                </div>
+
+                <div style="width:28rem;">
+                    <p class="text-light">¿Ya tienes cuenta? <a class="link-light" asp-controller="Usuario" asp-action="Perfil">inicia sesión</a></p>
+                </div>
+            </div>
+        </form>
+    }
+    else
+    {
+        <form method="post">
+            <div class="card bg-dark d-flex flex-column align-items-center p-5" style="width:40rem;min-height:44rem;">
+                <h1 class="text-light">Registro</h1>
+                <h5 style="color:lightgreen">@ViewData["MENSAJE"]</h5>
+                <h5 style="color:lightcoral">@ViewData["ERROR"]</h5>
+                <a href="@ViewData["URL"]">@ViewData["URL"]</a>
+                <div class="mb-3" style="width:28rem;">
+                    <label for="nombre" class="form-label text-light">Nombre:</label>
+                    <input type="text" class="form-control" name="nombre" value="@formRegistro.Nombre">
+                </div>
+                <div class="mb-3" style="width:28rem;">
+                    <label for="apellido" class="form-label text-light">Apellido:</label>
+                    <input type="text" class="form-control" name="apellido" value="@formRegistro.Apellido">
+                </div>
+                <div class="mb-3" style="width:28rem;">
+                    <label for="email" class="form-label text-light">Email:</label>
+                    <input type="email" class="form-control" name="email" value="@formRegistro.Email">
+                    <div class="form-text text-light">Nosotros nunca compartiremos su información con terceros.</div>
+                </div>
+                <div class="mb-3" style="width:28rem;">
+                    <label for="password" class="form-label text-light">Contraseña:</label>
+                    <input type="password" class="form-control" name="password" value="@formRegistro.Password">
+                </div>
+                <div class="mb-3" style="width:28rem;">
+                    <label for="password2" class="form-label text-light">Repetir Contraseña:</label>
+                    <input type="password" class="form-control" name="password2" value="@formRegistro.Password2">
+                </div>
+                <div class="mb-3 form-check" style="width:28rem;">
+                    <input type="checkbox" class="form-check-input" value="true" name="terminos">
+                    <label class="form-check-label text-light" for="terminos">he leído los <a asp-controller="Usuario" asp-action="Terminos" class="link-light">terminos de uso</a> y estoy de acuerdo</label>
+                </div>
+                <div class="mb-3" style="width:28rem;">
+                    <button class="btn btn-primary">Registrarse</button>
+                </div>
+
+                <div style="width:28rem;">
+                    <p class="text-light">¿Ya tienes cuenta? <a class="link-light" asp-controller="Usuario" asp-action="Perfil">inicia sesión</a></p>
+                </div>
+            </div>
+        </form>
+    }
+</div>

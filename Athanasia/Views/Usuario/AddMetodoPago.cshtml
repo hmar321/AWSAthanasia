@@ -1,0 +1,40 @@
+﻿@{
+    List<MetodoPago> metodosPago = ViewData["METODOSPAGO"] as List<MetodoPago>;
+    int idusuario = int.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+}
+<div class="card bg-light p-5">
+    <h1>Añadir metodo pago</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-5">
+            <form method="post">
+                <div class="form-group mb-3">
+                    <label for="nombre" class="control-label">Nombre metodo pago</label>
+                    <input type="text" name="nombre" class="form-control" required />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="direccion" class="control-label">Dirección</label>
+                    <input type="text" name="direccion" class="form-control" required />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="indicaciones" class="control-label">Indicaciones</label>
+                    <textarea name="indicaciones" class="form-control"></textarea>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="idmetodopago" class="control-label">Metodos aceptados</label>
+                    <select name="idmetodopago" class="form-select">
+                        @foreach (MetodoPago mp in metodosPago)
+                        {
+                            <option value="@mp.IdMetodoPago">@mp.Nombre</option>
+                        }
+                    </select>
+                </div>
+                <input type="hidden" value="@idusuario" name="idusuario" />
+                <div class="form-group d-flex flex-row justify-content-between">
+                    <button class="btn btn-success">Guardar</button>
+                    <a class="btn btn-dark link-light" asp-controller="Usuario" asp-action="Perfil">Ir a metodos pago</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

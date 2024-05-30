@@ -1,0 +1,23 @@
+﻿<div class="d-flex flex-column align-items-center" style="min-height:100%">
+    <form method="post">
+        <div class="card bg-dark d-flex flex-column align-items-center p-5" style="width:40rem;min-height:24rem;">
+            <h1 class="text-light">Login</h1>
+            <h5 style="color:lightgreen">@ViewData["MENSAJE"]</h5>
+            <h5 style="color:lightcoral">@ViewData["ERROR"]</h5>
+            <div class="mb-3" style="width:28rem;">
+                <label for="email" class="form-label text-light">Email:</label>
+                <input type="email" class="form-control" name="email">
+            </div>
+            <div class="mb-3" style="width:28rem;">
+                <label for="password" class="form-label text-light">Contraseña:</label>
+                <input type="password" class="form-control" name="password">
+            </div>
+            <div class="mb-3" style="width:28rem;">
+                <button class="btn btn-primary">Login</button>
+            </div>
+            <div style="width:28rem;">
+                <p class="text-light">¿No tienes cuenta? <a class="link-light" asp-controller="Usuario" asp-action="Registro">registrate</a></p>
+            </div>
+        </div>
+    </form>
+</div>

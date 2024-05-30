@@ -1,0 +1,120 @@
+﻿@{
+    List<ProductoSimpleView> productos;
+    if (Context.User.Identity.IsAuthenticated == false)
+    {
+        productos = memoryCache.Get<List<ProductoSimpleView>>("CARRITO");
+    }
+    else
+    {
+        string idusuario = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        productos = await serviceRedis.GetProductosFavoritosAsync(idusuario);
+    }
+    double precioTotal = 0;
+    double precioVarios = 0;
+    string urlOrigen = helperPaths.GetStorageBlob("portadas");
+}
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("button[data-valor]").each(function () {
+                var idproducto = $(this).data("idproducto");
+                var inicio = "/Producto/_Precio?idproducto=" + idproducto;
+                $("#" + idproducto).load(inicio);
+                $(this).click(function () {
+                    var valor = $(this).data("valor");
+                    var unidades = $(this).data("unidades");
+                    console.log(unidades);
+                    var resultado = unidades + valor;
+                    if (resultado > 0) {
+                        var request = "/Producto/_Precio?idproducto=" + idproducto + "&valor=" + valor;
+                        $("#" + idproducto).load(request);
+                        $("button[data-idproducto='" + idproducto + "']").data("unidades", resultado);
+                        $("h6[data-texto='" + idproducto + "']").text(resultado);
+                        var prodPrecio = $(this).val();
+                        var antiguo = $("#totalcarrito").text();
+                        var restar = prodPrecio * unidades;
+                        var sumar = prodPrecio * resultado;
+                        var total = antiguo - restar + sumar;
+                        $("#totalcarrito").text(total + "");
+                    }
+                })
+            })
+        })
+    </script>
+}
+<table id="tablaproductos" class="table table-light">
+    <thead>
+        <tr>
+            <th style="border-radius:0.35rem 0 0 0;">
+                <h4>Productos</h4>
+            </th>
+            <th></th>
+            <th style="border-radius: 0 0.35rem 0 0;">
+                <h5>Precio</h5>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (productos == null)
+        {
+
+            <tr>
+                <td colspan="3" class="p-4">
+                    <h6>No tienes productos en el carrito</h6>
+                </td>
+            </tr>
+        }
+        else
+        {
+
+            @foreach (ProductoSimpleView producto in productos)
+            {
+                precioTotal += producto.Precio * producto.Unidades;
+                <tr>
+                    <td colspan="2">
+                        <div class="d-flex flex-wrap">
+                            <img src="@(urlOrigen+producto.Portada)" class="rounded" style="height:20rem;width:13rem;">
+
+                            <div class="d-flex flex-column gap-3 m-4">
+                                <a class="text-decoration-none" asp-controller="Libro" asp-action="Detalles" asp-route-idproducto="@producto.IdProducto">
+                                    <h3 class="text-primary">@producto.Titulo</h3>
+                                </a>
+                                <h5>@producto.Autor</h5>
+                                <h5 class="text-muted">@producto.Formato</h5>
+                                <div class="d-flex flex-wrap align-items-start">
+                                    <button value="@producto.Precio" data-valor="-1" data-unidades="@producto.Unidades" data-idproducto="@producto.IdProducto" class="btn btn-secondary">
+                                        -
+                                    </button>
+                                    <div data-idproducto="@producto.IdProducto">
+                                        <h6 data-texto="@producto.IdProducto" class="form-control d-grid align-content-center justify-content-center" style="width:2.5rem;height:2.5rem;padding:0;">@producto.Unidades</h6>
+                                    </div>
+                                    <button value="@producto.Precio" data-valor="1" data-unidades="@producto.Unidades" data-idproducto="@producto.IdProducto" class="btn btn-secondary">
+                                        +
+                                    </button>
+                                    <a asp-controller="Producto" asp-action="QuitarProductoCarrito" asp-route-idproducto="@producto.IdProducto" class="btn btn-danger mx-3 d-flex flex-column justify-content-center align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="25" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </td>
+                    <td id="@producto.IdProducto">
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td></td>
+                <td class="">
+                    <h5>Subtotal (@productos.Count productos): <span id="totalcarrito">@precioTotal</span>€</h5>
+                </td>
+                <td>
+                    <a asp-controller="Pedido" asp-action="Comprar" class="btn btn-success">Comprar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

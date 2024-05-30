@@ -1,0 +1,33 @@
+﻿.contenedor-producto {
+    background-color: rgb(50, 50, 50);
+    min-height: 30vh;
+    width: 110rem;
+    max-width: 98vw;
+    border-radius: 5px;
+    min-height: 65vh;
+    padding: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.imglibro {
+    height: 35rem;
+    width: 25rem;
+}
+.seccion-portada {
+    width: 25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.seccion-sinopsis {
+    max-width: 60rem;
+    min-width:15rem;
+    padding:1rem;
+}
+.seccion-info {
+    width:15vw;
+    min-width:12rem;
+    max-width:20rem;
+}

@@ -1,0 +1,9 @@
+﻿@model ProductoSimpleView
+@if (Model.Unidades > 1)
+{
+    <h5>@(Model.Precio*Model.Unidades)-(@Model.Precio€)</h5>
+}
+else
+{
+    <h5>@Model.Precio€</h5>
+}

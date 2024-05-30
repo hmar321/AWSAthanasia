@@ -1,0 +1,47 @@
+﻿@{
+    int idusuario = int.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    string nombre = Context.User.Identity.Name;
+    string apellido = Context.User.FindFirst(ClaimTypes.Surname).Value;
+    string email = Context.User.FindFirst(ClaimTypes.Email).Value;
+    string imagen = Context.User.FindFirst(ClaimTypes.UserData).Value;
+    string urlOrigen = helperPaths.GetStorageBlob("usuarios");
+}
+<div class="card bg-light p-5">
+    <h1 class="text-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+        </svg>
+        Perfil
+    </h1>
+    <img src="@(urlOrigen+imagen)" class="rounded" style="width:20rem;height:20rem;" />
+    <h4>@nombre @apellido</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            Nombre
+        </dt>
+        <dd class="col-sm-9">
+            @nombre
+        </dd>
+        <dt class="col-sm-3">
+            Apellido
+        </dt>
+        <dd class="col-sm-9">
+            @apellido
+        </dd>
+        <dt class="col-sm-3">
+            Email
+        </dt>
+        <dd class="col-sm-9">
+            @email
+        </dd>
+    </dl>
+    <div class="col-md-5">
+        <div class="d-flex flex-row justify-content-between">
+            <a asp-controller="Usuario" asp-action="Editar" asp-route-idusuario="@idusuario" class="btn btn-dark">Editar</a>
+            <a asp-controller="Usuario" asp-action="ResetPass" asp-route-idusuario="@idusuario" class="btn btn-dark">Cambiar contraseña</a>
+        </div>
+    </div>
+    <h4>@ViewData["MENSAJE"]</h4>
+    <a href="@ViewData["URL"]">@ViewData["URL"]</a>
+</div>
